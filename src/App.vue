@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { heroes, maps } from './consts'
+import { heroes, maps, heroImages, mapImages } from './consts'
 import { ref } from 'vue'
 
 // Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
@@ -116,7 +116,10 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
               handleCardClick(hero)
             "
           >
-            {{ hero }}
+            <div class="card-content">
+              <img :src="heroImages[hero]" :alt="hero" />
+              <div class="card-name">{{ hero }}</div>
+            </div>
             <div class="card-status" v-if="hero === player1Hero">Player 1</div>
             <div class="card-status" v-if="hero === player2Hero">Player 2</div>
             <div class="card-status" v-if="bannedHeroes.includes(hero)">Banned</div>
@@ -124,53 +127,54 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
         </div>
       </div>
 
-      <div class="section choices">
-        <div class="choice-column">
-          <h3>Maps</h3>
-          <div class="cards">
-            <div
-              v-for="map in availableMaps"
-              :key="map"
-              class="card map"
-              :class="{
-                'not-available':
-                  (currentPhase !== 'choice' && currentPhase !== 'final') || selectedMap,
-              }"
-              @click="
-                (currentPhase === 'choice' || currentPhase === 'final') &&
-                !selectedMap &&
-                handleMapSelect(map)
-              "
-            >
-              {{ map }}
-              <div class="card-status" v-if="map === selectedMap">Selected</div>
+      <div class="section">
+        <h3>Maps</h3>
+        <div class="cards">
+          <div
+            v-for="map in availableMaps"
+            :key="map"
+            class="card map"
+            :class="{
+              'not-available':
+                (currentPhase !== 'choice' && currentPhase !== 'final') || selectedMap,
+            }"
+            @click="
+              (currentPhase === 'choice' || currentPhase === 'final') &&
+              !selectedMap &&
+              handleMapSelect(map)
+            "
+          >
+            <div class="card-content">
+              <img :src="mapImages[map]" :alt="map" />
+              <div class="card-name">{{ map }}</div>
             </div>
+            <div class="card-status" v-if="map === selectedMap">Selected</div>
           </div>
         </div>
+      </div>
 
-        <div class="choice-column">
-          <h3>Play Order</h3>
-          <div class="cards">
-            <div
-              class="card position"
-              :class="{
-                'not-available':
-                  (currentPhase !== 'choice' && currentPhase !== 'final') || whoGoesFirst !== null,
-              }"
-              @click="!whoGoesFirst && handlePositionSelect(true)"
-            >
-              Go Firsr
-            </div>
-            <div
-              class="card position"
-              :class="{
-                'not-available':
-                  (currentPhase !== 'choice' && currentPhase !== 'final') || whoGoesFirst !== null,
-              }"
-              @click="!whoGoesFirst && handlePositionSelect(false)"
-            >
-              Go Second
-            </div>
+      <div class="section">
+        <h3>Position</h3>
+        <div class="cards">
+          <div
+            class="card position"
+            :class="{
+              'not-available':
+                (currentPhase !== 'choice' && currentPhase !== 'final') || whoGoesFirst !== null,
+            }"
+            @click="!whoGoesFirst && handlePositionSelect(true)"
+          >
+            Go First
+          </div>
+          <div
+            class="card position"
+            :class="{
+              'not-available':
+                (currentPhase !== 'choice' && currentPhase !== 'final') || whoGoesFirst !== null,
+            }"
+            @click="!whoGoesFirst && handlePositionSelect(false)"
+          >
+            Go Second
           </div>
         </div>
       </div>
@@ -182,19 +186,28 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
         <div class="result-card">
           <div class="turn-order">{{ whoGoesFirst === 1 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 1</h3>
-          <div class="hero-name">{{ player1Hero }}</div>
+          <div class="card-content">
+            <img :src="heroImages[player1Hero]" :alt="player1Hero" />
+            <div class="hero-name">{{ player1Hero }}</div>
+          </div>
         </div>
 
         <div class="result-card">
           <div class="turn-order">{{ whoGoesFirst === 2 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 2</h3>
-          <div class="hero-name">{{ player2Hero }}</div>
+          <div class="card-content">
+            <img :src="heroImages[player2Hero]" :alt="player2Hero" />
+            <div class="hero-name">{{ player2Hero }}</div>
+          </div>
         </div>
       </div>
 
       <div class="result-card map-result">
         <h3>Map</h3>
-        <div class="map-name">{{ selectedMap }}</div>
+        <div class="card-content">
+          <img :src="mapImages[selectedMap]" :alt="selectedMap" />
+          <div class="map-name">{{ selectedMap }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -228,7 +241,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
 
 .cards {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
   overflow-x: auto;
@@ -244,21 +257,20 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
 .card {
   position: relative;
   flex-shrink: 0;
-  border-radius: 8px;
-  padding: 20px;
-  width: 120px;
-  height: 120px;
+  border-radius: 12px;
+  padding: 8px;
+  width: 220px;
+  height: 300px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
+  justify-content: space-between;
+  font-size: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.2s;
   cursor: pointer;
-  color: #333;
-  font-weight: 500;
-  text-align: center;
   background-color: #ffffff;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -276,14 +288,38 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.card-name {
+  font-weight: 500;
+  text-align: center;
+  padding: 4px;
+  color: #333;
+}
+
 .card-status {
   position: absolute;
-  bottom: 5px;
+  bottom: 0;
   left: 0;
   right: 0;
   font-size: 0.8rem;
-  padding: 2px;
+  padding: 4px;
   background-color: rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .card.banned {
@@ -322,9 +358,9 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
 
 .result-card {
   background-color: #f5f5f5;
-  padding: 30px;
+  padding: 20px;
   border-radius: 12px;
-  min-width: 250px;
+  min-width: 320px;
   position: relative;
 }
 
@@ -347,7 +383,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
 }
 
 .map-result {
-  max-width: 400px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -372,12 +408,30 @@ h3 {
 }
 
 .card.position {
-  background-color: #f0f0f0;
-  width: 150px;
+  background-color: #28a745;
+  color: white;
+  width: 200px;
+  height: 60px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
 }
 
 .card.position:hover {
-  background-color: #e0e0e0;
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.card.position:active {
+  background-color: #1e7e34;
+  transform: translateY(0);
 }
 
 .position-result {
@@ -394,10 +448,36 @@ h3 {
 
 .choice-column {
   flex: 1;
-  max-width: 500px;
 }
 
 .choice-column h3 {
   text-align: center;
+}
+
+.choice-column.map {
+  flex: 2;
+}
+
+.choice-column.position {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.result-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: contain;
+  margin: 12px 0;
+}
+
+.card.map {
+  height: 350px;
+  width: 500px;
+}
+
+.card.map img {
+  height: 300px;
 }
 </style>
