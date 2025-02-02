@@ -1,4 +1,4 @@
-export const heroes = {
+export const heroes: Record<string, string[]> = {
   "Hell's Kitchen": ['Daredevil', 'Bullseye', 'Elektra'],
   'For King and Country': ['Winter Soldier', 'Black Widow', 'Black Panther'],
   "Sun's Origin": ['Oda Nobunaga', 'Tomoe Gozen'],
@@ -27,7 +27,7 @@ export const heroes = {
   'The Witcher - Realms Fall': ['Philippa', 'Yennefer & Triss', 'Eredin'],
 }
 
-export const maps = {
+export const maps: Record<string, string[]> = {
   'Adventures - Tales to Amaze': ['McMinnville OR', 'Point Pleasant'],
   'Battle of Legends, Volume One': ['Marmoreal', 'Sarpedon'],
   'Cobble & Fog': ['Baskerville Manor', 'Soho'],
@@ -47,9 +47,9 @@ export const maps = {
   'Little Red Riding Hood vs. Beowulf': ['Heorot'],
   "Sun's Origin": ['Azuchi Castle'],
   'Jurassic Park - Sattler vs. T-Rex': ['T. Rex Paddock'],
-}
+} as const
 
-export const mapImages = {
+export const mapImages: Record<string, string> = {
   'McMinnville OR': '/maps/mcminnville.webp',
   'Point Pleasant': '/maps/point-pleasant.webp',
   Marmoreal: '/maps/marmoreal.webp',
@@ -78,7 +78,7 @@ export const mapImages = {
   'T. Rex Paddock': '/maps/trex.webp',
 }
 
-export const heroImages = {
+export const heroImages: Record<string, string> = {
   Daredevil: '/heroes/daredevil.webp',
   Bullseye: '/heroes/bullseye.webp',
   Elektra: '/heroes/elektra.webp',
@@ -140,18 +140,18 @@ export const heroImages = {
   Eredin: '/heroes/eredin.webp',
 }
 
-export const globallyBannedHeroes = [
+export const globallyBannedHeroes: string[] = [
   'Ciri',
   'Geralt of Rivia',
   'Ancient Leshen',
   'Philippa',
   'Yennefer & Triss',
   'Eredin',
-] as const
+]
 
-export const globallyBannedMaps = [
+export const globallyBannedMaps: string[] = [
   'Streets of Novigrad',
   'Naglfar',
   'Kaer Morhen',
   'Fayrlund Forest',
-] as const
+]
