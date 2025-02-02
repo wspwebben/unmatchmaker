@@ -23,6 +23,8 @@ export const heroes = {
   Deadpool: ['Deadpool'],
   'Jurassic Park - Sattler vs. T-Rex': ['Dr. Sattler', 'T. Rex'],
   'Slings and Arrows': ['The Wayward Sisters', 'Shakespeare', 'Titania', 'Hamlet'],
+  'The Witcher - Steel & Silver': ['Ciri', 'Geralt of Rivia', 'Ancient Leshen'],
+  'The Witcher - Realms Fall': ['Philippa', 'Yennefer & Triss', 'Eredin'],
 }
 
 export const maps = {
