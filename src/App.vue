@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import { heroes, maps, heroImages, mapImages } from './consts'
+import {
+  heroes,
+  maps,
+  heroImages,
+  mapImages,
+  globallyBannedHeroes,
+  globallyBannedMaps,
+} from './consts'
 import { ref } from 'vue'
 
 // Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
 const availableHeroes = ref(
-  [...Object.values(heroes).flat()].sort(() => Math.random() - 0.5).slice(0, 7),
+  [...Object.values(heroes).flat()]
+    .filter((hero) => !globallyBannedHeroes.includes(hero))
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 7),
 )
 const availableMaps = ref(
-  [...Object.values(maps).flat()].sort(() => Math.random() - 0.5).slice(0, 3),
+  [...Object.values(maps).flat()]
+    .filter((map) => !globallyBannedMaps.includes(map))
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3),
 )
 
 // Update the phase type to include both choices

@@ -139,3 +139,19 @@ export const heroImages = {
   'Yennefer & Triss': '/heroes/yennefer-triss.webp',
   Eredin: '/heroes/eredin.webp',
 }
+
+export const globallyBannedHeroes = [
+  'Ciri',
+  'Geralt of Rivia',
+  'Ancient Leshen',
+  'Philippa',
+  'Yennefer & Triss',
+  'Eredin',
+] as const
+
+export const globallyBannedMaps = [
+  'Streets of Novigrad',
+  'Naglfar',
+  'Kaer Morhen',
+  'Fayrlund Forest',
+] as const
