@@ -4,8 +4,6 @@ import {
   maps,
   heroImages,
   mapImages,
-  globallyBannedHeroes,
-  globallyBannedMaps,
 } from './consts'
 import { ref } from 'vue'
 
@@ -19,13 +17,11 @@ const getImagePath = (imagePath: string) => {
 // Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
 const availableHeroes = ref(
   [...Object.values(heroes).flat()]
-    .filter((hero) => !globallyBannedHeroes.includes(hero))
     .sort(() => Math.random() - 0.5)
     .slice(0, 7),
 )
 const availableMaps = ref(
   [...Object.values(maps).flat()]
-    .filter((map) => !globallyBannedMaps.includes(map))
     .sort(() => Math.random() - 0.5)
     .slice(0, 3),
 )
