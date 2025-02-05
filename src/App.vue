@@ -9,6 +9,13 @@ import {
 } from './consts'
 import { ref } from 'vue'
 
+const projectName = 'unmatchmaker'; // Define your project name
+
+// Function to get image path with project name
+const getImagePath = (imagePath: string) => {
+  return `/${projectName}/${imagePath}`;
+}
+
 // Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
 const availableHeroes = ref(
   [...Object.values(heroes).flat()]
@@ -130,7 +137,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="heroImages[hero]" :alt="hero" />
+              <img :src="getImagePath(heroImages[hero])" :alt="hero" />
               <div class="card-name">{{ hero }}</div>
             </div>
             <div class="card-status" v-if="hero === player1Hero">Player 1</div>
@@ -158,7 +165,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="mapImages[map]" :alt="map" />
+              <img :src="getImagePath(mapImages[map])" :alt="map" />
               <div class="card-name">{{ map }}</div>
             </div>
             <div class="card-status" v-if="map === selectedMap">Selected</div>
@@ -200,7 +207,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 1 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 1</h3>
           <div class="card-content">
-            <img :src="heroImages[player1Hero]" :alt="player1Hero" />
+            <img :src="getImagePath(heroImages[player1Hero])" :alt="player1Hero" />
             <div class="hero-name">{{ player1Hero }}</div>
           </div>
         </div>
@@ -209,7 +216,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 2 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 2</h3>
           <div class="card-content">
-            <img :src="heroImages[player2Hero]" :alt="player2Hero" />
+            <img :src="getImagePath(heroImages[player2Hero])" :alt="player2Hero" />
             <div class="hero-name">{{ player2Hero }}</div>
           </div>
         </div>
@@ -218,7 +225,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
       <div class="result-card map-result">
         <h3>Map</h3>
         <div class="card-content">
-          <img :src="mapImages[selectedMap]" :alt="selectedMap" />
+          <img :src="getImagePath(mapImages[selectedMap])" :alt="selectedMap" />
           <div class="map-name">{{ selectedMap }}</div>
         </div>
       </div>
