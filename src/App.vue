@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import {
-  heroes,
-  maps,
   heroImages,
   mapImages,
+  heroNames,
+  mapNames,
+  type HeroCode,
+  type MapCode,
 } from './consts'
 import { ref } from 'vue'
 
@@ -15,13 +17,13 @@ const getImagePath = (imagePath: string) => {
 }
 
 // Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
-const availableHeroes = ref(
-  [...Object.values(heroes).flat()]
+const availableHeroes = ref<HeroCode[]>(
+  (Object.keys(heroNames) as HeroCode[])
     .sort(() => Math.random() - 0.5)
     .slice(0, 7),
 )
-const availableMaps = ref(
-  [...Object.values(maps).flat()]
+const availableMaps = ref<MapCode[]>(
+  (Object.keys(mapNames) as MapCode[])
     .sort(() => Math.random() - 0.5)
     .slice(0, 3),
 )
@@ -33,10 +35,10 @@ const currentPhase = ref<'ban1' | 'ban2' | 'pick1' | 'pick2' | 'choice' | 'final
 const currentPlayer = ref<1 | 2>(1)
 
 // Results
-const player1Hero = ref<string>('')
-const player2Hero = ref<string>('')
-const bannedHeroes = ref<string[]>([])
-const selectedMap = ref<string>('')
+const player1Hero = ref<HeroCode>('')
+const player2Hero = ref<HeroCode>('')
+const bannedHeroes = ref<HeroCode[]>([])
+const selectedMap = ref<MapCode>('')
 const player2Choice = ref<'map' | 'position' | ''>('')
 const whoGoesFirst = ref<1 | 2 | null>(null)
 
@@ -50,7 +52,7 @@ const phaseText = {
   complete: 'Draft Complete!',
 }
 
-const handleCardClick = (item: string) => {
+const handleCardClick = (item: HeroCode) => {
   switch (currentPhase.value) {
     case 'ban1':
     case 'ban2':
@@ -72,7 +74,7 @@ const handleCardClick = (item: string) => {
   }
 }
 
-const handleMapSelect = (map: string) => {
+const handleMapSelect = (map: MapCode) => {
   selectedMap.value = map
   if (currentPhase.value === 'choice') {
     player2Choice.value = 'map'
@@ -133,8 +135,8 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="getImagePath(heroImages[hero])" :alt="hero" />
-              <div class="card-name">{{ hero }}</div>
+              <img :src="getImagePath(heroImages[hero])" :alt="heroNames[hero]" />
+              <div class="card-name">{{ heroNames[hero] }}</div>
             </div>
             <div class="card-status" v-if="hero === player1Hero">Player 1</div>
             <div class="card-status" v-if="hero === player2Hero">Player 2</div>
@@ -161,8 +163,8 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="getImagePath(mapImages[map])" :alt="map" />
-              <div class="card-name">{{ map }}</div>
+              <img :src="getImagePath(mapImages[map])" :alt="mapNames[map]" />
+              <div class="card-name">{{ mapNames[map] }}</div>
             </div>
             <div class="card-status" v-if="map === selectedMap">Selected</div>
           </div>
@@ -203,8 +205,8 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 1 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 1</h3>
           <div class="card-content">
-            <img :src="getImagePath(heroImages[player1Hero])" :alt="player1Hero" />
-            <div class="hero-name">{{ player1Hero }}</div>
+            <img :src="getImagePath(heroImages[player1Hero])" :alt="heroNames[player1Hero]" />
+            <div class="hero-name">{{ heroNames[player1Hero] }}</div>
           </div>
         </div>
 
@@ -212,8 +214,8 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 2 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 2</h3>
           <div class="card-content">
-            <img :src="getImagePath(heroImages[player2Hero])" :alt="player2Hero" />
-            <div class="hero-name">{{ player2Hero }}</div>
+            <img :src="getImagePath(heroImages[player2Hero])" :alt="heroNames[player2Hero]" />
+            <div class="hero-name">{{ heroNames[player2Hero] }}</div>
           </div>
         </div>
       </div>
@@ -221,14 +223,13 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
       <div class="result-card map-result">
         <h3>Map</h3>
         <div class="card-content">
-          <img :src="getImagePath(mapImages[selectedMap])" :alt="selectedMap" />
-          <div class="map-name">{{ selectedMap }}</div>
+          <img :src="getImagePath(mapImages[selectedMap])" :alt="mapNames[selectedMap]" />
+          <div class="map-name">{{ mapNames[selectedMap] }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <style scoped>
 .container {
   max-width: 1200px;
@@ -497,3 +498,4 @@ h3 {
   height: 300px;
 }
 </style>
+
