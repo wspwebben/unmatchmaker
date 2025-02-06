@@ -12,13 +12,6 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const projectName = 'unmatchmaker'; // Define your project name
-
-// Function to get image path with project name
-const getImagePath = (imagePath: string) => {
-  return `/${projectName}/${imagePath}`;
-}
-
 // Extract heroes and maps from URL parameters
 const heroesParam = route.query.heroes as string || '';
 const mapsParam = route.query.maps as string || '';
@@ -147,7 +140,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="getImagePath(heroImages[hero])" :alt="heroNames[hero]" />
+              <img :src="heroImages[hero]" :alt="heroNames[hero]" />
               <div class="card-name">{{ heroNames[hero] }}</div>
             </div>
             <div class="card-status" v-if="hero === player1Hero">Player 1</div>
@@ -175,7 +168,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
             "
           >
             <div class="card-content">
-              <img :src="getImagePath(mapImages[map])" :alt="mapNames[map]" />
+              <img :src="mapImages[map]" :alt="mapNames[map]" />
               <div class="card-name">{{ mapNames[map] }}</div>
             </div>
             <div class="card-status" v-if="map === selectedMap">Selected</div>
@@ -217,7 +210,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 1 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 1</h3>
           <div class="card-content">
-            <img :src="getImagePath(heroImages[player1Hero])" :alt="heroNames[player1Hero]" />
+            <img :src="heroImages[player1Hero]" :alt="heroNames[player1Hero]" />
             <div class="hero-name">{{ heroNames[player1Hero] }}</div>
           </div>
         </div>
@@ -226,7 +219,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
           <div class="turn-order">{{ whoGoesFirst === 2 ? 'First' : 'Second' }} Turn</div>
           <h3>Player 2</h3>
           <div class="card-content">
-            <img :src="getImagePath(heroImages[player2Hero])" :alt="heroNames[player2Hero]" />
+            <img :src="heroImages[player2Hero]" :alt="heroNames[player2Hero]" />
             <div class="hero-name">{{ heroNames[player2Hero] }}</div>
           </div>
         </div>
@@ -235,7 +228,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
       <div class="result-card map-result">
         <h3>Map</h3>
         <div class="card-content">
-          <img :src="getImagePath(mapImages[selectedMap])" :alt="mapNames[selectedMap]" />
+          <img :src="mapImages[selectedMap]" :alt="mapNames[selectedMap]" />
           <div class="map-name">{{ mapNames[selectedMap] }}</div>
         </div>
       </div>
