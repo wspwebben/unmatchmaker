@@ -8,38 +8,49 @@ import {
   type MapCode,
 } from '../consts'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const projectName = 'unmatchmaker'; // Define your project name
 
 // Function to get image path with project name
 const getImagePath = (imagePath: string) => {
-  return imagePath
   return `/${projectName}/${imagePath}`;
 }
 
-// Convert to arrays and shuffle initially, limiting to 7 heroes and 3 maps
-const availableHeroes = ref<HeroCode[]>(
-  (Object.keys(heroNames) as HeroCode[])
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 7),
-)
-const availableMaps = ref<MapCode[]>(
-  (Object.keys(mapNames) as MapCode[])
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3),
-)
+// Extract heroes and maps from URL parameters
+const heroesParam = route.query.heroes as string || '';
+const mapsParam = route.query.maps as string || '';
+
+// Validation function
+const isHeroCode = (hero: string): hero is HeroCode => {
+  return Object.keys(heroNames).includes(hero);
+};
+
+const isMapCode = (map: string): map is MapCode => {
+  return Object.keys(mapNames).includes(map);
+};
+
+// Convert to arrays and filter invalid codes
+const availableHeroes = ref(
+  heroesParam.split(',').filter(isHeroCode)
+);
+const availableMaps = ref(
+  mapsParam.split(',').filter(isMapCode)
+);
 
 // Update the phase type to include both choices
 const currentPhase = ref<'ban1' | 'ban2' | 'pick1' | 'pick2' | 'choice' | 'final' | 'complete'>(
   'ban1',
-)
-const currentPlayer = ref<1 | 2>(1)
+);
+const currentPlayer = ref<1 | 2>(1);
 
 // Results
-const player1Hero = ref<HeroCode>('')
-const player2Hero = ref<HeroCode>('')
-const bannedHeroes = ref<HeroCode[]>([])
-const selectedMap = ref<MapCode>('')
+const player1Hero = ref<HeroCode | null>(null);
+const player2Hero = ref<HeroCode | null>(null);
+const bannedHeroes = ref<HeroCode[]>([]);
+const selectedMap = ref<MapCode | null>(null);
 const player2Choice = ref<'map' | 'position' | ''>('')
 const whoGoesFirst = ref<1 | 2 | null>(null)
 
@@ -199,7 +210,7 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
       </div>
     </div>
 
-    <div v-if="currentPhase === 'complete'" class="results">
+    <div v-if="currentPhase === 'complete' && player1Hero && player2Hero && selectedMap" class="results">
       <h2>Draft Results</h2>
       <div class="result-cards">
         <div class="result-card">
