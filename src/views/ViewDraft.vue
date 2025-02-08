@@ -204,7 +204,6 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
     </div>
 
     <div v-if="currentPhase === 'complete' && player1Hero && player2Hero && selectedMap" class="results">
-      <h2>Draft Results</h2>
       <div class="result-cards">
         <div class="result-card">
           <div class="turn-order">{{ whoGoesFirst === 1 ? 'First' : 'Second' }} Turn</div>
@@ -235,64 +234,283 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 8px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .status {
   text-align: center;
-  margin: 20px 0;
+  margin: 16px 0;
   padding: 10px;
   background-color: #f5f5f5;
   border-radius: 8px;
 }
 
+.status h2 {
+  font-size: 1.1rem;
+}
+
 .draft-info {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .section {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
+}
+
+.section h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
 }
 
 .cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  overflow-x: auto;
-  padding: 10px 0;
-}
-
-.cards.small .card {
-  width: 100px;
-  height: 100px;
-  font-size: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  padding: 8px 0;
+  width: 100%;
 }
 
 .card {
   position: relative;
-  flex-shrink: 0;
-  border-radius: 12px;
-  padding: 8px;
-  width: 220px;
-  height: 300px;
+  border-radius: 8px;
+  padding: 6px;
+  height: 180px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  font-size: 1rem;
+  font-size: 0.9rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.2s;
   cursor: pointer;
   background-color: #ffffff;
   overflow: hidden;
+  padding-bottom: 24px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.card img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.card.map {
+  height: 180px;
+}
+
+.card.map img {
+  height: 120px;
+}
+
+.card.position {
+  height: 60px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.card.position:hover:not(.not-available) {
+  background-color: #218838;
+}
+
+.results {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.results h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.results h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 12px auto;
+  padding: 0 20px;
+  max-width: 800px;
+}
+
+.result-card {
+  background-color: #f5f5f5;
+  padding: 28px 16px 16px;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-card img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+  margin: 8px auto;
+}
+
+.hero-name,
+.map-name {
+  font-size: 1.2rem;
+  margin-top: 6px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.turn-order {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4a90e2;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.map-result {
+  margin-top: 28px;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .status h2 {
+    font-size: 1.3rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    height: 260px;
+    padding: 8px;
+    padding-bottom: 24px;
+  }
+
+  .card img {
+    height: 200px;
+  }
+
+  .card.map {
+    height: 240px;
+  }
+
+  .card.map img {
+    height: 180px;
+  }
+
+  .results {
+    padding: 24px 0;
+  }
+
+  .results h2 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+  }
+
+  .results h3 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+
+  .result-cards {
+    grid-template-columns: 1fr 1fr;
+    max-width: none;
+    padding: 0 24px;
+    margin: 0 auto;
+    gap: 24px;
+  }
+
+  .result-card {
+    flex: 1;
+    max-width: 250px;
+    margin: 0 auto;
+    padding: 28px;
+  }
+
+  .result-card img {
+    max-width: 240px;
+  }
+
+  .hero-name,
+  .map-name {
+    font-size: 1.3rem;
+  }
+
+  .turn-order {
+    font-size: 1.1rem;
+    padding: 6px 16px;
+    top: -18px;
+  }
+
+  .map-result {
+    max-width: 600px;
+    margin: 32px auto 0;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .card {
+    height: 300px;
+  }
+
+  .card img {
+    height: 240px;
+  }
+
+  .card.map {
+    height: 350px;
+  }
+
+  .card.map img {
+    height: 300px;
+  }
 }
 
 .card:hover {
@@ -310,27 +528,13 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
-
-.card img {
-  width: 100%;
-  height: 240px;
-  object-fit: contain;
-  margin-bottom: 4px;
-}
-
 .card-name {
   font-weight: 500;
   text-align: center;
   padding: 4px;
   color: #333;
+  font-size: 0.8rem;
+  word-break: break-word;
 }
 
 .card-status {
@@ -356,151 +560,13 @@ const handlePositionSelect = (isGoingFirst: boolean) => {
   background-color: #e5ffe8;
 }
 
-.card.map,
-.card.position {
+.card.map {
   background-color: #fff8e5;
 }
 
 .card.map.selected,
 .card.position.selected {
   border: 2px solid #ffd700;
-}
-
-.results {
-  text-align: center;
-  padding: 40px 0;
-}
-
-.result-cards {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  margin: 30px 0;
-}
-
-.result-card {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 12px;
-  min-width: 320px;
-  position: relative;
-}
-
-.turn-order {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #4a90e2;
-  color: white;
-  padding: 4px 16px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-
-.hero-name {
-  font-size: 1.4rem;
-  margin-top: 10px;
-  font-weight: 500;
-}
-
-.map-result {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.map-name {
-  font-size: 1.4rem;
-  margin-top: 10px;
-  font-weight: 500;
-  color: #666;
-}
-
-h2,
-h3 {
-  color: #666;
-  margin-bottom: 20px;
-}
-
-.position-cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.card.position {
-  background-color: #28a745;
-  color: white;
-  width: 200px;
-  height: 60px;
-  margin: 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 8px;
-  transition:
-    background-color 0.3s,
-    transform 0.2s;
-}
-
-.card.position:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
-}
-
-.card.position:active {
-  background-color: #1e7e34;
-  transform: translateY(0);
-}
-
-.position-result {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.choices {
-  display: flex;
-  gap: 40px;
-  justify-content: center;
-}
-
-.choice-column {
-  flex: 1;
-}
-
-.choice-column h3 {
-  text-align: center;
-}
-
-.choice-column.map {
-  flex: 2;
-}
-
-.choice-column.position {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.result-card img {
-  width: 100%;
-  height: 280px;
-  object-fit: contain;
-  margin: 12px 0;
-}
-
-.card.map {
-  height: 350px;
-  width: 500px;
-}
-
-.card.map img {
-  height: 300px;
 }
 </style>
 
