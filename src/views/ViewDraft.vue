@@ -1,49 +1,21 @@
 <script setup lang="ts">
-import {
-  heroImages,
-  mapImages,
-  heroNames,
-  mapNames,
-  type HeroCode,
-  type MapCode,
-} from '../consts'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useDraftPool } from '../composables/useDraftPool'
+import { type HeroCode, type MapCode, heroImages, mapImages, heroNames, mapNames } from '../consts'
 
-const route = useRoute()
+type DraftPhase = 'ban1' | 'ban2' | 'pick1' | 'pick2' | 'choice' | 'final' | 'complete'
 
-// Extract heroes and maps from URL parameters
-const heroesParam = route.query.heroes as string || '';
-const mapsParam = route.query.maps as string || '';
-
-// Validation function
-const isHeroCode = (hero: string): hero is HeroCode => {
-  return Object.keys(heroNames).includes(hero);
-};
-
-const isMapCode = (map: string): map is MapCode => {
-  return Object.keys(mapNames).includes(map);
-};
-
-// Convert to arrays and filter invalid codes
-const availableHeroes = ref(
-  heroesParam.split(',').filter(isHeroCode)
-);
-const availableMaps = ref(
-  mapsParam.split(',').filter(isMapCode)
-);
+const { availableHeroes, availableMaps } = useDraftPool()
 
 // Update the phase type to include both choices
-const currentPhase = ref<'ban1' | 'ban2' | 'pick1' | 'pick2' | 'choice' | 'final' | 'complete'>(
-  'ban1',
-);
-const currentPlayer = ref<1 | 2>(1);
+const currentPhase = ref<DraftPhase>('ban1')
+const currentPlayer = ref<1 | 2>(1)
 
 // Results
-const player1Hero = ref<HeroCode | null>(null);
-const player2Hero = ref<HeroCode | null>(null);
-const bannedHeroes = ref<HeroCode[]>([]);
-const selectedMap = ref<MapCode | null>(null);
+const player1Hero = ref<HeroCode | null>(null)
+const player2Hero = ref<HeroCode | null>(null)
+const bannedHeroes = ref<HeroCode[]>([])
+const selectedMap = ref<MapCode | null>(null)
 const player2Choice = ref<'map' | 'position' | ''>('')
 const whoGoesFirst = ref<1 | 2 | null>(null)
 
