@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <h1>Unmatchmaker</h1>
-    <router-link to="/draft" class="draft-link">Start Draft</router-link>
+    <div class="draft-links">
+      <router-link to="/draft" class="draft-link">Start Draft</router-link>
+      <router-link to="/team-draft" class="draft-link">Start Team Draft</router-link>
+    </div>
   </div>
 </template>
 
@@ -12,6 +15,12 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+}
+
+.draft-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .draft-link {
