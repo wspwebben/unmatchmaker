@@ -1,23 +1,36 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { type MapCode, mapImages, mapNames } from '../../consts'
+import { type MapStep } from '../../types/draft'
 
-defineProps<{
+const props = defineProps<{
   map: MapCode
+  draftStep?: MapStep
   onClick: () => void
 }>()
+
+const disabled = computed(() => !!props.draftStep?.value)
 </script>
 
 <template>
-  <div class="card map" @click="onClick">
+  <div
+    class="card map"
+    :class="{ 'not-available': disabled }"
+    @click="onClick"
+  >
     <div class="card-content">
       <img :src="mapImages[map]" :alt="mapNames[map]" />
       <div class="card-name">{{ mapNames[map] }}</div>
+    </div>
+    <div v-if="draftStep && draftStep.value === map" class="card-status" :class="{ 'team-a': draftStep.team === 'A', 'team-b': draftStep.team === 'B' }">
+      Selected
     </div>
   </div>
 </template>
 
 <style scoped>
 .card {
+  position: relative;
   background: white;
   padding: 12px;
   border-radius: 8px;
@@ -26,9 +39,31 @@ defineProps<{
   border: 2px solid transparent;
 }
 
-.card:hover {
+.team-a {
+  --team-color: var(--team-a-color);
+}
+
+.team-b {
+  --team-color: var(--team-b-color);
+}
+
+.card:hover:not(.not-available) {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card.not-available {
+  cursor: not-allowed;
+}
+
+.card.not-available::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255, 0.5);
 }
 
 .card-content {
@@ -50,6 +85,19 @@ defineProps<{
 .card-name {
   text-align: center;
   font-weight: 500;
+}
+
+.card-status {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 8px;
+  color: white;
+  background: var(--team-color, rgba(0, 0, 0));
+  opacity: 0.8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 640px) {

@@ -20,9 +20,11 @@ const draftScheme: DraftStep[] = [
 
 const { availableHeroes, availableMaps } = useDraftPool()
 const {
+  steps,
+  mapStep,
+  positionStep,
   currentStep,
   currentStepIndex,
-  steps,
   getHeroDraftStep,
   selectHero,
   selectMap,
@@ -50,8 +52,8 @@ const getStepDisplay = (step: DraftStep) => {
 
 <template>
   <div class="container">
-    <div class="sticky-header">
-      <h1 class="phase-text" :class="{ 'team-a': currentStep?.team === 'A', 'team-b': currentStep?.team === 'B' }">
+    <div class="sticky-header" :class="{ 'team-a': currentStep?.team === 'A', 'team-b': currentStep?.team === 'B' }">
+      <h1 class="phase-text">
         <span class="phase-team-text">Team {{ currentStep.team }}:</span>
         <span class="phase-step-text">
           {{ currentStep.type === 'pick' ? 'Pick a hero' :
@@ -100,13 +102,14 @@ const getStepDisplay = (step: DraftStep) => {
           v-for="map in availableMaps"
           :key="map"
           :map="map"
+          :draft-step="mapStep"
           @click="selectMap(map)"
         />
       </div>
 
       <div class="position-buttons">
-        <PositionButton :position="1" @click="selectPosition(1)" />
-        <PositionButton :position="2" @click="selectPosition(2)" />
+        <PositionButton :position="1" :draft-step="positionStep" @click="selectPosition(1)" />
+        <PositionButton :position="2" :draft-step="positionStep" @click="selectPosition(2)" />
       </div>
     </div>
   </div>
@@ -138,8 +141,9 @@ const getStepDisplay = (step: DraftStep) => {
   left: 0;
   right: 0;
   z-index: 100;
-  background: white;
-  border-bottom: 1px solid #eee;
+  background-color: var(--team-color);
+  color: white;
+  border-bottom: 1px solid #000000b3;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -150,7 +154,6 @@ const getStepDisplay = (step: DraftStep) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: white;
   z-index: -1;
 }
 
@@ -161,10 +164,6 @@ const getStepDisplay = (step: DraftStep) => {
   margin: 0;
   padding: 16px;
   transition: color 0.2s;
-}
-
-.phase-team-text {
-  color: var(--team-color);
 }
 
 .phase-step-text {

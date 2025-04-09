@@ -16,10 +16,12 @@ const firstTeam = computed(() => route.query.first as 'A' | 'B')
     <h1 class="title">Team Match</h1>
 
     <div class="match-layout">
-      <!-- Team A -->
       <div class="team-section">
-        <h2 class="team-title" :class="{ 'goes-first': firstTeam === 'A' }">
-          Team A {{ firstTeam === 'A' ? '(First)' : '(Second)' }}
+        <h2 class="team-title">
+          <span class="team-name team-a">Team A</span>
+          <span v-if="firstTeam === 'A'">
+            (First)
+          </span>
         </h2>
         <div class="hero-grid">
           <div v-for="hero in teamAHeroes" :key="hero" class="hero-card">
@@ -29,7 +31,6 @@ const firstTeam = computed(() => route.query.first as 'A' | 'B')
         </div>
       </div>
 
-      <!-- Map -->
       <div class="map-section">
         <h2 class="section-title">Map</h2>
         <div class="map-card">
@@ -38,10 +39,12 @@ const firstTeam = computed(() => route.query.first as 'A' | 'B')
         </div>
       </div>
 
-      <!-- Team B -->
       <div class="team-section">
-        <h2 class="team-title" :class="{ 'goes-first': firstTeam === 'B' }">
-          Team B {{ firstTeam === 'B' ? '(First)' : '(Second)' }}
+        <h2 class="team-title team-b">
+          <span class="team-name team-b">Team B</span>
+          <span v-if="firstTeam === 'B'">
+            (First)
+          </span>
         </h2>
         <div class="hero-grid">
           <div v-for="hero in teamBHeroes" :key="hero" class="hero-card">
@@ -56,10 +59,20 @@ const firstTeam = computed(() => route.query.first as 'A' | 'B')
 
 <style scoped>
 .container {
+  --team-a-color: #4a90e2;
+  --team-b-color: #e24a4a;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 12px;
+}
+
+.team-a {
+  --team-color: var(--team-a-color);
+}
+
+.team-b {
+  --team-color: var(--team-b-color);
 }
 
 .title {
@@ -84,11 +97,11 @@ const firstTeam = computed(() => route.query.first as 'A' | 'B')
   text-align: center;
   margin-bottom: 0.75rem;
   font-size: 1.1rem;
-  font-weight: 600;
 }
 
-.team-title.goes-first {
-  color: #4a90e2;
+.team-name {
+  font-weight: 600;
+  color: var(--team-color);
 }
 
 .hero-grid {

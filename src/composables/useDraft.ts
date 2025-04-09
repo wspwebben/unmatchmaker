@@ -27,6 +27,9 @@ export function useDraft(scheme: DraftStep[]) {
     steps.value.some(step => step.type === 'choice')
   )
 
+  const mapStep = computed(() => steps.value.find(step => step.type === 'map'))
+  const positionStep = computed(() => steps.value.find(step => step.type === 'position'))
+
   const handleStepComplete = () => {
     const nextStepIndex = currentStepIndex.value + 1
 
@@ -34,16 +37,14 @@ export function useDraft(scheme: DraftStep[]) {
       const pickedHeroes = steps.value.filter(step => step.type === 'pick')
       const teamAHeroes = pickedHeroes.filter(step => step.team === 'A').map(step => step.value)
       const teamBHeroes = pickedHeroes.filter(step => step.team === 'B').map(step => step.value)
-      const selectedMap = steps.value.find(step => step.type === 'map')!
-      const selectedPosition = steps.value.find(step => step.type === 'position')!
-      const firstTeam = selectedPosition.value === 1 ? selectedPosition.team : selectedMap.team
+      const firstTeam = positionStep.value!.value === 1 ? positionStep.value!.team : mapStep.value!.team
 
       return router.push({
         name: 'team-match',
         query: {
           teamA: teamAHeroes.join(','),
           teamB: teamBHeroes.join(','),
-          map: selectedMap.value,
+          map: mapStep.value!.value,
           first: firstTeam,
         },
       })
@@ -107,6 +108,8 @@ export function useDraft(scheme: DraftStep[]) {
 
   return {
     steps,
+    mapStep,
+    positionStep,
     currentStep,
     currentStepIndex,
     needToMakeChoice,
