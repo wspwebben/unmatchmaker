@@ -1,47 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useDraftPool } from '../composables/useDraftPool'
-import { type HeroCode, type MapCode, heroImages, heroNames, mapImages, mapNames } from '../consts'
+import { useDraft } from '../composables/useDraft'
+import { type DraftStep } from '../types/draft'
+import { type HeroCode, type MapCode, heroNames, mapNames } from '../consts'
+import HeroCard from '../components/draft/HeroCard.vue'
+import MapCard from '../components/draft/MapCard.vue'
+import PositionButton from '../components/draft/PositionButton.vue'
 
-interface BaseDraftStep {
-  type: 'pick' | 'ban' | 'map' | 'position' | 'choice' | 'final'
-  team: 'A' | 'B'
-}
-
-interface PickStep extends BaseDraftStep {
-  type: 'pick'
-  value: HeroCode | null
-}
-
-interface BanStep extends BaseDraftStep {
-  type: 'ban'
-  value: HeroCode | null
-}
-
-interface MapStep extends BaseDraftStep {
-  type: 'map'
-  value: MapCode | null
-}
-
-interface PositionStep extends BaseDraftStep {
-  type: 'position'
-  value: 1 | 2 | null
-}
-
-interface ChoiceStep extends BaseDraftStep {
-  type: 'choice'
-  value: 'map' | 'position' | null
-}
-
-interface FinalStep extends BaseDraftStep {
-  type: 'final'
-  value: null
-}
-
-type DraftStep = PickStep | BanStep | MapStep | PositionStep | ChoiceStep | FinalStep
-
-const draftSteps: DraftStep[] = [
+const draftScheme: DraftStep[] = [
   { type: 'pick', team: 'A', value: null },
   { type: 'pick', team: 'B', value: null },
   { type: 'ban', team: 'A', value: null },
@@ -52,125 +18,16 @@ const draftSteps: DraftStep[] = [
   { type: 'final', team: 'A', value: null },
 ]
 
-const router = useRouter()
 const { availableHeroes, availableMaps } = useDraftPool()
-
-const currentStepIndex = ref(0)
-const steps = ref<DraftStep[]>(draftSteps)
-
-const currentStep = computed<DraftStep>(() => steps.value[currentStepIndex.value])
-
-const unavailableHeroes = computed(() =>
-  steps.value
-    .filter(step => step.type === 'pick' || step.type === 'ban')
-    .filter(step => step.value)
-    .map((step) => ({
-      hero: step.value,
-      reason: step.type === 'ban' ? 'ban' : 'pick',
-    }))
-)
-
-const isHeroDisabled = (hero: HeroCode) => unavailableHeroes.value.some(h => h.hero === hero)
-
-const phaseText = computed(() => {
-  const step = currentStep.value
-
-  switch (step?.type) {
-    case 'pick':
-      return `Pick a hero`
-    case 'ban':
-      return `Ban a hero`
-    case 'map':
-      return `Select a map`
-    case 'position':
-      return `Choose turn order`
-    case 'choice':
-      return `Choose map or position`
-    case 'final':
-    default:
-      return 'Unknown step'
-  }
-})
-
-const handleStepComplete = () => {
-  currentStepIndex.value++
-
-  if (currentStepIndex.value === steps.value.length) {
-    const pickedHeroes = steps.value.filter(step => step.type === 'pick')
-
-    const teamAHeroes = pickedHeroes.filter(step => step.team === 'A').map(step => step.value)
-    const teamBHeroes = pickedHeroes.filter(step => step.team === 'B').map(step => step.value)
-    const selectedMap = steps.value.find(step => step.type === 'map')!
-    const selectedPosition = steps.value.find(step => step.type === 'position')!
-
-    const firstTeam = selectedPosition.value === 1 ? selectedPosition.team : selectedMap.team
-
-    router.push({
-      name: 'team-match',
-      query: {
-        teamA: teamAHeroes.join(','),
-        teamB: teamBHeroes.join(','),
-        map: selectedMap.value,
-        first: firstTeam,
-      },
-    })
-  }
-}
-
-const selectHero = (hero: HeroCode) => {
-  if (currentStep.value.type !== 'pick' && currentStep.value.type !== 'ban') {
-    return
-  }
-
-  if (isHeroDisabled(hero)) {
-    return
-  }
-
-  steps.value[currentStepIndex.value].value = hero
-  handleStepComplete()
-}
-
-const needToMakeChoice = computed(() => steps.value.some(step => step.type === 'choice'))
-
-const makeChoice = (choice: 'map' | 'position') => {
-  if (currentStep.value.type !== 'choice') return
-
-  const choiceStep = steps.value.findIndex(step => step.type === 'choice')
-  steps.value[choiceStep] = {
-    type: choice,
-    team: steps.value[choiceStep].team,
-    value: null,
-  }
-
-  const finalStep = steps.value.findIndex(step => step.type === 'final')
-  steps.value[finalStep] = {
-    type: choice === 'map' ? 'position' : 'map',
-    team: steps.value[finalStep].team,
-    value: null,
-  }
-}
-
-const selectMap = (map: MapCode) => {
-  if (needToMakeChoice.value) {
-    makeChoice('map')
-  }
-
-  if (currentStep.value.type !== 'map') return
-
-  steps.value[currentStepIndex.value].value = map
-  handleStepComplete()
-}
-
-const selectPosition = (position: 1 | 2) => {
-  if (needToMakeChoice.value) {
-    makeChoice('position')
-  }
-
-  if (currentStep.value.type !== 'position') return
-
-  steps.value[currentStepIndex.value].value = position
-  handleStepComplete()
-}
+const {
+  currentStep,
+  currentStepIndex,
+  steps,
+  getHeroDraftStep,
+  selectHero,
+  selectMap,
+  selectPosition,
+} = useDraft(draftScheme)
 
 const getStepDisplay = (step: DraftStep) => {
   if (!step.value) return ''
@@ -196,7 +53,14 @@ const getStepDisplay = (step: DraftStep) => {
     <div class="sticky-header">
       <h1 class="phase-text" :class="{ 'team-a': currentStep?.team === 'A', 'team-b': currentStep?.team === 'B' }">
         <span class="phase-team-text">Team {{ currentStep.team }}:</span>
-        <span class="phase-step-text">{{ phaseText }}</span>
+        <span class="phase-step-text">
+          {{ currentStep.type === 'pick' ? 'Pick a hero' :
+             currentStep.type === 'ban' ? 'Ban a hero' :
+             currentStep.type === 'map' ? 'Select a map' :
+             currentStep.type === 'position' ? 'Choose turn order' :
+             currentStep.type === 'choice' ? 'Choose map or position' :
+             'Unknown step' }}
+        </span>
       </h1>
     </div>
 
@@ -222,42 +86,27 @@ const getStepDisplay = (step: DraftStep) => {
       </div>
 
       <div class="cards hero-cards">
-        <div
+        <HeroCard
           v-for="hero in availableHeroes"
           :key="hero"
-          class="card"
-          :class="{
-            'not-available': isHeroDisabled(hero),
-          }"
+          :hero="hero"
+          :draft-step="getHeroDraftStep(hero)"
           @click="selectHero(hero)"
-        >
-          <div class="card-content">
-            <img :src="heroImages[hero]" :alt="heroNames[hero]" />
-            <div class="card-name">{{ heroNames[hero] }}</div>
-          </div>
-          <div class="card-status" v-if="isHeroDisabled(hero)">
-            {{ unavailableHeroes.find(h => h.hero === hero)!.reason === 'pick' ? 'Picked' : 'Banned' }}
-          </div>
-        </div>
+        />
       </div>
 
       <div class="cards map-cards">
-        <div
+        <MapCard
           v-for="map in availableMaps"
           :key="map"
-          class="card map"
+          :map="map"
           @click="selectMap(map)"
-        >
-          <div class="card-content">
-            <img :src="mapImages[map]" :alt="mapNames[map]" />
-            <div class="card-name">{{ mapNames[map] }}</div>
-          </div>
-        </div>
+        />
       </div>
 
       <div class="position-buttons">
-        <button class="choice-button" @click="selectPosition(1)">Go First</button>
-        <button class="choice-button" @click="selectPosition(2)">Go Second</button>
+        <PositionButton :position="1" @click="selectPosition(1)" />
+        <PositionButton :position="2" @click="selectPosition(2)" />
       </div>
     </div>
   </div>
@@ -282,7 +131,6 @@ const getStepDisplay = (step: DraftStep) => {
 .team-b {
   --team-color: var(--team-b-color);
 }
-
 
 .sticky-header {
   position: fixed;
@@ -376,76 +224,10 @@ const getStepDisplay = (step: DraftStep) => {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
-.card {
-  background: white;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 2px solid transparent;
-}
-
-.card:hover:not(.not-available) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card.not-available {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.card-content {
-  position: relative;
-}
-
-.card-content img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.card.map img {
-  aspect-ratio: 16/9;
-  object-fit: cover;
-}
-
-.card-name {
-  text-align: center;
-  font-weight: 500;
-}
-
-.card-status {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
 .position-buttons {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-}
-
-.choice-button {
-  padding: 12px 24px;
-  font-size: 1rem;
-  background-color: var(--team-a-color);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.choice-button:hover {
-  opacity: 0.9;
 }
 
 @media (max-width: 640px) {
@@ -485,10 +267,6 @@ const getStepDisplay = (step: DraftStep) => {
 
   .map-cards {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .card {
-    padding: 8px;
   }
 
   .position-buttons {
