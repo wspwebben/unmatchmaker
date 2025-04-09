@@ -58,7 +58,7 @@ const { availableHeroes, availableMaps } = useDraftPool()
 const currentStepIndex = ref(0)
 const steps = ref<DraftStep[]>(draftSteps)
 
-const currentStep = computed(() => steps.value[currentStepIndex.value])
+const currentStep = computed<DraftStep>(() => steps.value[currentStepIndex.value])
 
 const unavailableHeroes = computed(() =>
   steps.value
@@ -77,17 +77,16 @@ const phaseText = computed(() => {
 
   switch (step?.type) {
     case 'pick':
-      return `Team ${step.team}: Pick a hero`
+      return `Pick a hero`
     case 'ban':
-      return `Team ${step.team}: Ban a hero`
-    case 'choice':
-      return `Team ${step.team}: Choose map or position`
+      return `Ban a hero`
     case 'map':
-      return `Team ${step.team}: Select a map`
+      return `Select a map`
     case 'position':
-      return `Team ${step.team}: Choose turn order`
+      return `Choose turn order`
+    case 'choice':
+      return `Choose map or position`
     case 'final':
-      return `Team ${step.team}: ${steps.value[currentStepIndex.value - 1].type === 'map' ? 'Choose turn order' : 'Select a map'}`
     default:
       return 'Unknown step'
   }
@@ -194,8 +193,11 @@ const getStepDisplay = (step: DraftStep) => {
 
 <template>
   <div class="container">
-    <div class="status">
-      <h2>{{ phaseText }}</h2>
+    <div class="sticky-header">
+      <h1 class="phase-text" :class="{ 'team-a': currentStep?.team === 'A', 'team-b': currentStep?.team === 'B' }">
+        <span class="phase-team-text">Team {{ currentStep.team }}:</span>
+        <span class="phase-step-text">{{ phaseText }}</span>
+      </h1>
     </div>
 
     <div class="draft-layout">
@@ -213,7 +215,7 @@ const getStepDisplay = (step: DraftStep) => {
           <div class="pick-label">
             Team {{ step.team }} {{ step.type }}
           </div>
-          <div class="pick-value">
+          <div class="pick-value" :class="{ 'team-a': step.team === 'A', 'team-b': step.team === 'B' }">
             {{ getStepDisplay(step) }}
           </div>
         </div>
@@ -238,10 +240,6 @@ const getStepDisplay = (step: DraftStep) => {
           </div>
         </div>
       </div>
-      <div class="position-buttons">
-        <button class="choice-button" @click="selectPosition(1)">Go First</button>
-        <button class="choice-button" @click="selectPosition(2)">Go Second</button>
-      </div>
 
       <div class="cards map-cards">
         <div
@@ -256,24 +254,75 @@ const getStepDisplay = (step: DraftStep) => {
           </div>
         </div>
       </div>
+
+      <div class="position-buttons">
+        <button class="choice-button" @click="selectPosition(1)">Go First</button>
+        <button class="choice-button" @click="selectPosition(2)">Go Second</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .container {
+  --team-a-color: #4a90e2;
+  --team-b-color: #e24a4a;
+  --header-height: 1.5lh;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 12px;
+  padding-top: calc(var(--header-height) + 24px);
 }
 
-.status {
+.team-a {
+  --team-color: var(--team-a-color);
+}
+
+.team-b {
+  --team-color: var(--team-b-color);
+}
+
+
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: -1;
+}
+
+.phase-text {
   text-align: center;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 16px;
+  transition: color 0.2s;
+}
+
+.phase-team-text {
+  color: var(--team-color);
+}
+
+.phase-step-text {
+  font-size: 0.9em;
+  font-weight: inherit;
+  margin-left: 0.5ch;
 }
 
 .draft-layout {
@@ -281,43 +330,27 @@ const getStepDisplay = (step: DraftStep) => {
   gap: 20px;
 }
 
-.draft-status {
+.team-picks {
   background: #f5f5f5;
-  padding: 20px;
+  padding: 16px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.team-picks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pick-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 12px;
   background: white;
   border-radius: 4px;
-  align-items: center;
-  border-left: 4px solid transparent;
-  transition: all 0.2s;
+  border-left: 4px solid var(--team-color);
 }
 
 .pick-row.active {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transform: scale(1.02);
-}
-
-.pick-row.team-a {
-  border-left-color: #4a90e2;
-}
-
-.pick-row.team-b {
-  border-left-color: #e24a4a;
 }
 
 .pick-label {
@@ -327,29 +360,12 @@ const getStepDisplay = (step: DraftStep) => {
 
 .pick-value {
   font-weight: 600;
-  color: #4a90e2;
-}
-
-.selection-area {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.section, .sidebar-section {
-  background: #f5f5f5;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.section h3, .sidebar-section h3 {
-  margin: 0 0 15px 0;
-  font-size: 1.2rem;
+  color: var(--team-color);
 }
 
 .cards {
   display: grid;
-  gap: 15px;
+  gap: 16px;
 }
 
 .hero-cards {
@@ -361,10 +377,9 @@ const getStepDisplay = (step: DraftStep) => {
 }
 
 .card {
-  position: relative;
   background: white;
+  padding: 12px;
   border-radius: 8px;
-  padding: 10px;
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid transparent;
@@ -381,9 +396,7 @@ const getStepDisplay = (step: DraftStep) => {
 }
 
 .card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
 }
 
 .card-content img {
@@ -393,68 +406,92 @@ const getStepDisplay = (step: DraftStep) => {
   margin-bottom: 8px;
 }
 
+.card.map img {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
 .card-name {
   text-align: center;
   font-weight: 500;
-  font-size: 0.9rem;
 }
 
 .card-status {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 8px;
+  right: 8px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
 }
 
-.card.map {
-  aspect-ratio: 16/9;
-}
-
-.card.map img {
-  height: 100%;
-  object-fit: cover;
-}
-
 .position-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .choice-button {
-  padding: 12px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
-  background-color: #4a90e2;
+  background-color: var(--team-a-color);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
-  width: 100%;
 }
 
 .choice-button:hover {
-  background-color: #357abd;
+  opacity: 0.9;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 640px) {
+  .container {
+    padding: 8px;
+    padding-top: calc(var(--header-height) + 16px);
+  }
+
+  .sticky-header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .phase-text {
+    font-size: 1.25rem;
+    padding: 12px;
+  }
+
   .draft-layout {
-    grid-template-columns: 300px 1fr;
+    gap: 12px;
   }
 
-  .draft-status {
-    position: sticky;
-    top: 20px;
-    align-self: start;
+  .team-picks {
+    padding: 12px;
   }
-}
 
-@media (max-width: 1024px) {
-  .options-row {
+  .pick-row {
+    padding: 8px 12px;
+  }
+
+  .cards {
+    gap: 12px;
+  }
+
+  .hero-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .map-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    padding: 8px;
+  }
+
+  .position-buttons {
     grid-template-columns: 1fr;
   }
 }
