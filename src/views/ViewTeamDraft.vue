@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useDraftPool } from '../composables/useDraftPool'
 import { type HeroCode, type MapCode, heroImages, heroNames, mapImages, mapNames } from '../consts'
 
@@ -51,6 +52,7 @@ const draftSteps: DraftStep[] = [
   { type: 'final', team: 'A', value: null },
 ]
 
+const router = useRouter()
 const { availableHeroes, availableMaps } = useDraftPool()
 
 const currentStepIndex = ref(0)
@@ -91,6 +93,31 @@ const phaseText = computed(() => {
   }
 })
 
+const handleStepComplete = () => {
+  currentStepIndex.value++
+
+  if (currentStepIndex.value === steps.value.length) {
+    const pickedHeroes = steps.value.filter(step => step.type === 'pick')
+
+    const teamAHeroes = pickedHeroes.filter(step => step.team === 'A').map(step => step.value)
+    const teamBHeroes = pickedHeroes.filter(step => step.team === 'B').map(step => step.value)
+    const selectedMap = steps.value.find(step => step.type === 'map')!
+    const selectedPosition = steps.value.find(step => step.type === 'position')!
+
+    const firstTeam = selectedPosition.value === 1 ? selectedPosition.team : selectedMap.team
+
+    router.push({
+      name: 'team-match',
+      query: {
+        teamA: teamAHeroes.join(','),
+        teamB: teamBHeroes.join(','),
+        map: selectedMap.value,
+        first: firstTeam,
+      },
+    })
+  }
+}
+
 const selectHero = (hero: HeroCode) => {
   if (currentStep.value.type !== 'pick' && currentStep.value.type !== 'ban') {
     return
@@ -101,7 +128,7 @@ const selectHero = (hero: HeroCode) => {
   }
 
   steps.value[currentStepIndex.value].value = hero
-  currentStepIndex.value++
+  handleStepComplete()
 }
 
 const needToMakeChoice = computed(() => steps.value.some(step => step.type === 'choice'))
@@ -132,7 +159,7 @@ const selectMap = (map: MapCode) => {
   if (currentStep.value.type !== 'map') return
 
   steps.value[currentStepIndex.value].value = map
-  currentStepIndex.value++
+  handleStepComplete()
 }
 
 const selectPosition = (position: 1 | 2) => {
@@ -143,7 +170,7 @@ const selectPosition = (position: 1 | 2) => {
   if (currentStep.value.type !== 'position') return
 
   steps.value[currentStepIndex.value].value = position
-  currentStepIndex.value++
+  handleStepComplete()
 }
 
 const getStepDisplay = (step: DraftStep) => {
