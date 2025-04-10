@@ -8,6 +8,8 @@ import MapCard from '../components/draft/MapCard.vue'
 import PositionButton from '../components/draft/PositionButton.vue'
 
 const draftScheme: DraftStep[] = [
+  { type: 'ban', team: 'A', value: null },
+  { type: 'ban', team: 'B', value: null },
   { type: 'pick', team: 'A', value: null },
   { type: 'pick', team: 'B', value: null },
   { type: 'ban', team: 'A', value: null },
