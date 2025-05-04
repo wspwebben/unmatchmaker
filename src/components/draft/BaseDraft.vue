@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDraftPool } from '../../composables/useDraftPool'
 import { useDraft } from '../../composables/useDraft'
-import { type DraftStep } from '../../types/draft'
+import { type DraftStep, type DraftType } from '../../types/draft'
 import { type HeroCode, type MapCode, heroNames, mapNames } from '../../consts'
 import HeroCard from './HeroCard.vue'
 import MapCard from './MapCard.vue'
@@ -9,6 +9,7 @@ import PositionButton from './PositionButton.vue'
 
 interface Props {
   draftScheme: DraftStep[]
+  draftType: DraftType
   teamNames: {
     a: string
     b: string
@@ -28,7 +29,7 @@ const {
   selectHero,
   selectMap,
   selectPosition,
-} = useDraft(props.draftScheme)
+} = useDraft(props.draftType, props.draftScheme)
 
 const getStepDisplay = (step: DraftStep) => {
   if (!step.value) return ''

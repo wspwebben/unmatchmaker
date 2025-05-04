@@ -14,6 +14,7 @@ const draftScheme: DraftStep[] = [
 
 <template>
   <BaseDraft
+    draft-type="duel"
     :draft-scheme="draftScheme"
     :team-names="{ a: 'Player 1', b: 'Player 2' }"
   />

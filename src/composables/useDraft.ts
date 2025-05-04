@@ -1,9 +1,9 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { type DraftStep } from '../types/draft'
+import { type DraftStep, type DraftType } from '../types/draft'
 import { type HeroCode, type MapCode } from '../consts'
 
-export function useDraft(scheme: DraftStep[]) {
+export function useDraft(draftType: DraftType, scheme: DraftStep[]) {
   const router = useRouter()
   const currentStepIndex = ref(0)
   const steps = ref<DraftStep[]>([...scheme])
@@ -40,8 +40,9 @@ export function useDraft(scheme: DraftStep[]) {
       const firstTeam = positionStep.value!.value === 1 ? positionStep.value!.team : mapStep.value!.team
 
       return router.push({
-        name: 'team-match',
+        name: 'match',
         query: {
+          type: draftType,
           teamA: teamAHeroes.join(','),
           teamB: teamBHeroes.join(','),
           map: mapStep.value!.value,

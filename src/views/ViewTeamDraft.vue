@@ -18,6 +18,7 @@ const draftScheme: DraftStep[] = [
 
 <template>
   <BaseDraft
+    draft-type="team"
     :draft-scheme="draftScheme"
     :team-names="{ a: 'Team A', b: 'Team B' }"
   />

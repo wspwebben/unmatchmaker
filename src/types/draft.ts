@@ -36,3 +36,5 @@ export interface FinalStep extends BaseDraftStep {
 }
 
 export type DraftStep = PickStep | BanStep | MapStep | PositionStep | ChoiceStep | FinalStep
+
+export type DraftType = 'duel' | 'team'
