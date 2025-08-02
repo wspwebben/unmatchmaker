@@ -3,6 +3,8 @@ import ViewHome from './views/ViewHome.vue'
 import ViewDraft from './views/ViewDraft.vue'
 import ViewTeamDraft from './views/ViewTeamDraft.vue'
 import ViewMatch from './views/ViewMatch.vue'
+import ViewRandomHeroes from './views/ViewRandomHeroes.vue'
+import ViewRandomMaps from './views/ViewRandomMaps.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -26,6 +28,16 @@ const router = createRouter({
       path: '/match',
       name: 'match',
       component: ViewMatch
+    },
+    {
+      path: '/random-heroes',
+      name: 'random-heroes',
+      component: ViewRandomHeroes
+    },
+    {
+      path: '/random-maps',
+      name: 'random-maps',
+      component: ViewRandomMaps
     }
   ]
 })

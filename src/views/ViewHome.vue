@@ -2,8 +2,10 @@
   <div class="home">
     <h1>Unmatchmaker</h1>
     <div class="draft-links">
-      <router-link to="/draft" class="draft-link">Start Draft</router-link>
-      <router-link to="/team-draft" class="draft-link">Start Team Draft</router-link>
+      <!-- <router-link to="/draft" class="draft-link">Start Draft</router-link>
+      <router-link to="/team-draft" class="draft-link">Start Team Draft</router-link> -->
+      <router-link to="/random-heroes" class="draft-link">Random Heroes</router-link>
+      <router-link to="/random-maps" class="draft-link">Random Maps</router-link>
     </div>
   </div>
 </template>
@@ -19,8 +21,10 @@
 
 .draft-links {
   display: flex;
+  flex-direction: column;
   gap: 20px;
   margin-top: 20px;
+  text-align: center;
 }
 
 .draft-link {
