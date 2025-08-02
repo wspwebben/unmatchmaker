@@ -57,7 +57,11 @@ export enum HeroCode {
   WinterSoldier = 'WINT',
   YenneferTriss = 'YENN',
   Yennenga = 'YENG',
-  KingArthur = 'KGAR'
+  KingArthur = 'KGAR',
+  Loki = 'LOKI',
+  Blackbeard = 'BKBD',
+  Pandora = 'PNDR',
+  Chupacabra = 'CHUP'
 }
 
 export const heroNames: Record<HeroCode, string> = {
@@ -119,7 +123,11 @@ export const heroNames: Record<HeroCode, string> = {
   [HeroCode.WinterSoldier]: 'Winter Soldier',
   [HeroCode.SunWukong]: 'Sun Wukong',
   [HeroCode.Yennenga]: 'Yennenga',
-  [HeroCode.YenneferTriss]: 'Yennefer & Triss'
+  [HeroCode.YenneferTriss]: 'Yennefer & Triss',
+  [HeroCode.Loki]: 'Loki',
+  [HeroCode.Blackbeard]: 'Blackbeard',
+  [HeroCode.Pandora]: 'Pandora',
+  [HeroCode.Chupacabra]: 'Chupacabra'
 }
 
 export const heroImages: Record<HeroCode, string> = {
@@ -181,7 +189,11 @@ export const heroImages: Record<HeroCode, string> = {
   [HeroCode.WinterSoldier]: '/heroes/winter-soldier.webp',
   [HeroCode.SunWukong]: '/heroes/sun-wukong.webp',
   [HeroCode.Yennenga]: '/heroes/yennenga.webp',
-  [HeroCode.YenneferTriss]: '/heroes/yennefer-triss.webp'
+  [HeroCode.YenneferTriss]: '/heroes/yennefer-triss.webp',
+  [HeroCode.Loki]: '/heroes/loki.webp',
+  [HeroCode.Blackbeard]: '/heroes/blackbeard.webp',
+  [HeroCode.Pandora]: '/heroes/pandora.webp',
+  [HeroCode.Chupacabra]: '/heroes/chupacabra.webp'
 }
 
 
@@ -211,7 +223,9 @@ export enum MapCode {
   Heorot = 'HEOR',
   Azuchi = 'AZUC',
   Naglfar = 'NAGL',
-  TrexPaddock = 'TREX'
+  TrexPaddock = 'TREX',
+  Venice = 'VENC',
+  SantasWorkshop = 'SANT'
 }
 
 export const mapNames: Record<MapCode, string> = {
@@ -240,7 +254,9 @@ export const mapNames: Record<MapCode, string> = {
   [MapCode.KingSolomonsMine]: "King Solomon's Mine",
   [MapCode.Sunnydale]: 'Sunnydale High',
   [MapCode.TrexPaddock]: 'T. Rex Paddock',
-  [MapCode.Yukon]: 'Yukon'
+  [MapCode.Yukon]: 'Yukon',
+  [MapCode.Venice]: 'Venice',
+  [MapCode.SantasWorkshop]: "Santa's Workshop"
 }
 
 export const mapImages: Record<MapCode, string> = {
@@ -269,5 +285,7 @@ export const mapImages: Record<MapCode, string> = {
   [MapCode.KingSolomonsMine]: '/maps/solomons-mine.webp',
   [MapCode.Sunnydale]: '/maps/sunnydale.webp',
   [MapCode.TrexPaddock]: '/maps/trex.webp',
-  [MapCode.Yukon]: '/maps/yukon.webp'
+  [MapCode.Yukon]: '/maps/yukon.webp',
+  [MapCode.Venice]: '/maps/venice.jpg',
+  [MapCode.SantasWorkshop]: '/maps/santas-workshop.jpg'
 }
