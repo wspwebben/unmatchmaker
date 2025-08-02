@@ -6,6 +6,7 @@
       <router-link to="/team-draft" class="draft-link">Start Team Draft</router-link> -->
       <router-link to="/random-heroes" class="draft-link">Random Heroes</router-link>
       <router-link to="/random-maps" class="draft-link">Random Maps</router-link>
+      <router-link to="/pool" class="draft-link">Pool</router-link>
     </div>
   </div>
 </template>

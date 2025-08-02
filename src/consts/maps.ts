@@ -23,7 +23,7 @@ export enum MapCode {
   KingSolomonsMine = 'SOLM',
   RaptorPaddock = 'RAPP',
   Heorot = 'HEOR',
-  Azuchi = 'AZUC',
+  AzuchiCastle = 'AZUC',
   Naglfar = 'NAGL',
   TrexPaddock = 'TREX',
   Venice = 'VENC',
@@ -31,7 +31,7 @@ export enum MapCode {
 }
 
 export const mapNames: Record<MapCode, string> = {
-  [MapCode.Azuchi]: 'Azuchi Castle',
+  [MapCode.AzuchiCastle]: 'Azuchi Castle',
   [MapCode.Baskerville]: 'Baskerville Manor',
   [MapCode.TheBronze]: 'The Bronze',
   [MapCode.Fayrlund]: 'Fayrlund Forest',
@@ -62,7 +62,7 @@ export const mapNames: Record<MapCode, string> = {
 }
 
 export const mapImages: Record<MapCode, string> = {
-  [MapCode.Azuchi]: '/maps/azuchi.webp',
+  [MapCode.AzuchiCastle]: '/maps/azuchi.webp',
   [MapCode.Baskerville]: '/maps/baskerville.webp',
   [MapCode.TheBronze]: '/maps/bronze.webp',
   [MapCode.Fayrlund]: '/maps/fayrlund.webp',

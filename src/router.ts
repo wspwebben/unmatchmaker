@@ -5,6 +5,7 @@ import ViewTeamDraft from './views/ViewTeamDraft.vue'
 import ViewMatch from './views/ViewMatch.vue'
 import ViewRandomHeroes from './views/ViewRandomHeroes.vue'
 import ViewRandomMaps from './views/ViewRandomMaps.vue'
+import ViewPool from './views/ViewPool.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/random-maps',
       name: 'random-maps',
       component: ViewRandomMaps
+    },
+    {
+      path: '/pool',
+      name: 'pool',
+      component: ViewPool
     }
   ]
 })
