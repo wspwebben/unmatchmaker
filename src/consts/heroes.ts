@@ -129,7 +129,6 @@ export const heroNames: Record<HeroCode, string> = {
   [HeroCode.Pandora]: 'Pandora',
   [HeroCode.Chupacabra]: 'Chupacabra'
 }
-
 export const heroImages: Record<HeroCode, string> = {
   [HeroCode.Achilles]: '/heroes/achilles.webp',
   [HeroCode.Alice]: '/heroes/alice.webp',
@@ -194,98 +193,4 @@ export const heroImages: Record<HeroCode, string> = {
   [HeroCode.Blackbeard]: '/heroes/blackbeard.webp',
   [HeroCode.Pandora]: '/heroes/pandora.webp',
   [HeroCode.Chupacabra]: '/heroes/chupacabra.webp'
-}
-
-
-export enum MapCode {
-  McMinnville = 'MCMV',
-  PointPleasant = 'PLST',
-  Marmoreal = 'MARM',
-  Sarpedon = 'SARP',
-  Baskerville = 'BASK',
-  Soho = 'SOHO',
-  Sunnydale = 'SUND',
-  TheBronze = 'BRNZ',
-  TheRaft = 'RAFT',
-  SanctumSanctorum = 'SANC',
-  NavyPier = 'NAVY',
-  Helicarrier = 'HELI',
-  HangingGardens = 'HANG',
-  Novigrad = 'NOVI',
-  GlobeTheatre = 'GLOB',
-  KaerMorhen = 'KAER',
-  Fayrlund = 'FAYR',
-  HellKitchen = 'HELL',
-  Yukon = 'YUKN',
-  Sherwood = 'SHRW',
-  KingSolomonsMine = 'SOLM',
-  RaptorPaddock = 'RAPP',
-  Heorot = 'HEOR',
-  Azuchi = 'AZUC',
-  Naglfar = 'NAGL',
-  TrexPaddock = 'TREX',
-  Venice = 'VENC',
-  SantasWorkshop = 'SANT'
-}
-
-export const mapNames: Record<MapCode, string> = {
-  [MapCode.Azuchi]: 'Azuchi Castle',
-  [MapCode.Baskerville]: 'Baskerville Manor',
-  [MapCode.TheBronze]: 'The Bronze',
-  [MapCode.Fayrlund]: 'Fayrlund Forest',
-  [MapCode.GlobeTheatre]: 'Globe Theatre',
-  [MapCode.HangingGardens]: 'Hanging Gardens',
-  [MapCode.Helicarrier]: 'Helicarrier',
-  [MapCode.HellKitchen]: "Hell's Kitchen",
-  [MapCode.Heorot]: 'Heorot',
-  [MapCode.KaerMorhen]: 'Kaer Morhen',
-  [MapCode.Marmoreal]: 'Marmoreal',
-  [MapCode.McMinnville]: 'McMinnville OR',
-  [MapCode.Naglfar]: 'Naglfar',
-  [MapCode.NavyPier]: 'Navy Pier',
-  [MapCode.Novigrad]: 'Streets of Novigrad',
-  [MapCode.PointPleasant]: 'Point Pleasant',
-  [MapCode.TheRaft]: 'The Raft',
-  [MapCode.RaptorPaddock]: 'Raptor Paddock',
-  [MapCode.SanctumSanctorum]: 'Sanctum Sanctorum',
-  [MapCode.Sarpedon]: 'Sarpedon',
-  [MapCode.Sherwood]: 'Sherwood Forest',
-  [MapCode.Soho]: 'Soho',
-  [MapCode.KingSolomonsMine]: "King Solomon's Mine",
-  [MapCode.Sunnydale]: 'Sunnydale High',
-  [MapCode.TrexPaddock]: 'T. Rex Paddock',
-  [MapCode.Yukon]: 'Yukon',
-  [MapCode.Venice]: 'Venice',
-  [MapCode.SantasWorkshop]: "Santa's Workshop"
-}
-
-export const mapImages: Record<MapCode, string> = {
-  [MapCode.Azuchi]: '/maps/azuchi.webp',
-  [MapCode.Baskerville]: '/maps/baskerville.webp',
-  [MapCode.TheBronze]: '/maps/bronze.webp',
-  [MapCode.Fayrlund]: '/maps/fayrlund.webp',
-  [MapCode.GlobeTheatre]: '/maps/globe.webp',
-  [MapCode.HangingGardens]: '/maps/hanging-gardens.webp',
-  [MapCode.Helicarrier]: '/maps/helicarrier.webp',
-  [MapCode.HellKitchen]: '/maps/hells-kitchen.webp',
-  [MapCode.Heorot]: '/maps/heorot.webp',
-  [MapCode.KaerMorhen]: '/maps/kaer-morhen.webp',
-  [MapCode.Marmoreal]: '/maps/marmoreal.webp',
-  [MapCode.McMinnville]: '/maps/mcminnville.webp',
-  [MapCode.Naglfar]: '/maps/naglfar.webp',
-  [MapCode.NavyPier]: '/maps/navy-pier.webp',
-  [MapCode.Novigrad]: '/maps/novigrad.webp',
-  [MapCode.PointPleasant]: '/maps/point-pleasant.webp',
-  [MapCode.TheRaft]: '/maps/raft.webp',
-  [MapCode.RaptorPaddock]: '/maps/raptor.webp',
-  [MapCode.SanctumSanctorum]: '/maps/sanctum.webp',
-  [MapCode.Sarpedon]: '/maps/sarpedon.webp',
-  [MapCode.Sherwood]: '/maps/sherwood.webp',
-  [MapCode.Soho]: '/maps/soho.webp',
-  [MapCode.KingSolomonsMine]: '/maps/solomons-mine.webp',
-  [MapCode.Sunnydale]: '/maps/sunnydale.webp',
-  [MapCode.TrexPaddock]: '/maps/trex.webp',
-  [MapCode.Yukon]: '/maps/yukon.webp',
-  [MapCode.Venice]: '/maps/venice.jpg',
-  [MapCode.SantasWorkshop]: '/maps/santas-workshop.jpg'
 }
