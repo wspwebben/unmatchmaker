@@ -2,193 +2,172 @@
   <div class="pool-container">
     <div class="pool-content">
       <header class="header">
-        <h1 class="title">Pool</h1>
-        <p class="subtitle">All available sets for testing images</p>
-      </header>
+        <h1 class="title">Available Sets</h1>
 
-      <div class="sets-grid">
-        <div
-          v-for="setCode in Object.values(SetCode)"
-          :key="setCode"
-          class="set-card"
-        >
-          <div class="set-image-container">
-            <img
-              :src="setImages[setCode]"
-              :alt="setNames[setCode]"
-              class="set-image"
-              @error="handleImageError"
-            />
+        <div class="controls">
+          <div class="control-buttons">
+            <button
+              @click="toggleAllSets"
+              class="control-btn"
+            >
+              {{ allSetsActive ? 'Deactivate All' : 'Activate All' }}
+            </button>
           </div>
-          <div class="set-info">
-            <h3 class="set-name">{{ setNames[setCode] }}</h3>
-            <div class="set-stats">
-              <span class="stat">
-                {{ setContents[setCode].heroes.length }} Heroes
-              </span>
-              <span class="stat">
-                {{ setContents[setCode].maps.length }} Maps
-              </span>
-            </div>
+
+          <div class="active-sets-info">
+            <span class="info-text">{{ activeSetsCount }} of {{ totalSetsCount }} sets active</span>
           </div>
         </div>
+      </header>
+
+      <div class="sets-container">
+        <SetCard
+          v-for="set in Object.values(SetCode)"
+          :key="set"
+          :set="set"
+          :active="isSetActive(set)"
+          @click="toggleSet(set)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { SetCode, setNames, setImages, setContents } from '../consts'
+import { SetCode } from '../consts'
+import SetCard from '../components/SetCard.vue'
+import { useActiveSets } from '../composables/useActiveSets'
 
-function handleImageError(event: Event) {
-  const img = event.target as HTMLImageElement
-  img.style.display = 'none'
-  const container = img.parentElement
-  if (container) {
-    container.innerHTML = '<div class="image-error">Image not found</div>'
-  }
-}
+const {
+  isSetActive,
+  toggleSet,
+  toggleAllSets,
+  activeSetsCount,
+  totalSetsCount,
+  allSetsActive,
+} = useActiveSets()
 </script>
 
 <style scoped>
 .pool-container {
   min-height: 100vh;
   background: #f7f7f7;
-  padding: 20px;
+  padding: 12px;
 }
 
 .pool-content {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #6c757d;
-  margin: 0;
+  margin: 0 0 16px 0;
 }
 
-.sets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 0;
-}
-
-.set-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
-}
-
-.set-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.set-image-container {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  background: #f8f9fa;
+.controls {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
 }
 
-.set-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-error {
-  color: #6c757d;
-  font-size: 1rem;
-  text-align: center;
-  padding: 20px;
-}
-
-.set-info {
-  padding: 20px;
-}
-
-.set-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0 0 12px 0;
-  line-height: 1.3;
-}
-
-.set-stats {
-  display: flex;
-  gap: 16px;
-}
-
-.stat {
+.active-sets-info {
   background: #e9ecef;
-  color: #495057;
-  padding: 4px 12px;
-  border-radius: 16px;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.info-text {
   font-size: 0.9rem;
+  color: #495057;
   font-weight: 500;
 }
 
-/* Responsive design */
+.control-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.control-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.control-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.sets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 @media (max-width: 768px) {
   .pool-container {
-    padding: 16px;
+    padding: 8px;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .subtitle {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 
-  .sets-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
+  .control-buttons {
+    gap: 6px;
   }
 
-  .set-image-container {
-    height: 160px;
-  }
-
-  .set-info {
-    padding: 16px;
+  .control-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
-  .sets-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .control-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 200px;
   }
 
-  .set-image-container {
-    height: 140px;
+  .control-btn {
+    width: 100%;
   }
 }
 </style>
