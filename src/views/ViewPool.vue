@@ -50,9 +50,7 @@ const {
 
 <style scoped>
 .pool-container {
-  min-height: 100vh;
-  background: #f7f7f7;
-  padding: 12px;
+  padding: 20px;
 }
 
 .pool-content {
@@ -69,18 +67,14 @@ const {
   font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 6px;
-}
-
-.subtitle {
-  font-size: 1rem;
-  color: #6c757d;
-  margin: 0 0 16px 0;
+  margin-bottom: 16px;
 }
 
 .controls {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -134,15 +128,11 @@ const {
 
 @media (max-width: 768px) {
   .pool-container {
-    padding: 8px;
+    padding: 16px;
   }
 
   .title {
     font-size: 1.75rem;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
   }
 
   .control-buttons {
@@ -156,8 +146,17 @@ const {
 }
 
 @media (max-width: 480px) {
+  .pool-container {
+    padding: 12px;
+  }
+
   .title {
     font-size: 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 8px;
   }
 
   .control-buttons {
