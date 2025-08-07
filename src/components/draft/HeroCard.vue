@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { type HeroCode, heroImages, heroNames } from '../../consts'
+import { type HeroCode, heroNames } from '../../consts'
 import { type DraftStep } from '../../types/draft'
+import HeroImage from '../HeroImage.vue'
 
 const props = defineProps<{
   hero: HeroCode
@@ -30,7 +31,7 @@ const disabled = computed(() => props.draftStep !== undefined)
     @click="onClick"
   >
     <div class="card-content">
-      <img :src="heroImages[hero]" :alt="heroNames[hero]" />
+      <HeroImage :hero="hero" />
       <div class="card-name">{{ heroNames[hero] }}</div>
     </div>
     <div class="card-status" :class="{ 'team-a': draftStep?.team === 'A', 'team-b': draftStep?.team === 'B' }" v-if="draftStep">

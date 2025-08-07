@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { type MapCode, mapImages, mapNames } from '../../consts'
+import { type MapCode, mapNames } from '../../consts'
 import { type MapStep } from '../../types/draft'
+import MapImage from '../MapImage.vue'
 
 const props = defineProps<{
   map: MapCode
@@ -19,7 +20,7 @@ const disabled = computed(() => !!props.draftStep?.value)
     @click="onClick"
   >
     <div class="card-content">
-      <img :src="mapImages[map]" :alt="mapNames[map]" />
+      <MapImage :map="map" />
       <div class="card-name">{{ mapNames[map] }}</div>
     </div>
     <div v-if="draftStep && draftStep.value === map" class="card-status" :class="{ 'team-a': draftStep.team === 'A', 'team-b': draftStep.team === 'B' }">
