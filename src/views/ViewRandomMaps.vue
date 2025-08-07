@@ -46,18 +46,19 @@
 </template>
 
 <script setup lang="ts">
-import { MapCode} from '../consts'
 import { useRandomGenerator } from '../composables/useRandomGenerator'
+import { useAvailableItems } from '../composables/useAvailableItems'
 import MapCard from '../components/draft/MapCard.vue'
+import type { MapCode } from '../consts'
 
-const mapItems = Object.values(MapCode)
+const { availableMaps } = useAvailableItems()
 
 const {
   count,
   maxCount,
   randomItems,
   generateRandomItems
-} = useRandomGenerator(mapItems, 3)
+} = useRandomGenerator<MapCode>(availableMaps, 3)
 </script>
 
 <style scoped>

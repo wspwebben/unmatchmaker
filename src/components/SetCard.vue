@@ -1,46 +1,37 @@
 <template>
-  <div class="set-section" :class="{ 'inactive': !active }" @click="$emit('click')">
-    <div class="set-header">
-      <div class="set-info">
-        <img :src="setImages[set]" :alt="setNames[set]" class="set-image" />
-        <h2 class="set-title">{{ setNames[set] }}</h2>
+  <div
+    class="set-card"
+    :class="{ 'active': active }"
+    @click="$emit('click')"
+  >
+    <div class="set-image-container">
+      <SetImage
+        class="set-image"
+        :set="set"
+      />
+    </div>
+    <div class="set-info">
+      <h3 class="set-name">{{ setNames[set] }}</h3>
+      <div class="set-stats">
+        <span class="stat">
+          {{ setContents[set].heroes.length }} Heroes
+        </span>
+        <span class="stat">
+          {{ setContents[set].maps.length }} Maps
+        </span>
       </div>
-
-      <div class="lists-container">
-        <div class="list-section">
-          <span class="list-title">Heroes:</span>
-          <span class="heroes-list">
-            <span
-              v-for="hero in setContents[set].heroes"
-              :key="hero"
-              class="hero-item"
-            >
-              {{ heroNames[hero] }}
-            </span>
-          </span>
-        </div>
-
-        <div v-if="setContents[set].maps.length > 0" class="list-section">
-          <span class="list-title">Maps:</span>
-          <span class="maps-list">
-            <span
-              v-for="map in setContents[set].maps"
-              :key="map"
-              class="map-item"
-            >
-              {{ mapNames[map] }}
-            </span>
-          </span>
-        </div>
+    </div>
+    <div class="set-overlay">
+      <div class="set-status" :class="{ 'status-active': active, 'status-inactive': !active }">
+        <span>{{ active ? 'Active' : 'Inactive' }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type SetCode, setNames, setImages, setContents } from '../consts'
-import { heroNames } from '../consts'
-import { mapNames } from '../consts'
+import { SetCode, setNames, setContents } from '../consts'
+import SetImage from './SetImage.vue'
 
 defineProps<{
   set: SetCode
@@ -53,181 +44,202 @@ defineEmits<{
 </script>
 
 <style scoped>
-.set-section {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.set-section:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-1px);
-}
-
-.set-section.inactive {
-  opacity: 0.6;
-  background: #f8f9fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.set-section.inactive:hover {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-}
-
-.set-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 12px 16px;
-  background: #f8f9fa;
-}
-
-.set-section.inactive .set-header {
-  background: #e9ecef;
-}
-
-.set-info {
+.set-card {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 2px solid transparent;
+  min-height: 80px;
+}
+
+.set-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.set-card.active {
+  border-color: #10b981;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.set-card.active:hover {
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+  transform: translateY(-4px);
+}
+
+.set-image-container {
   flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .set-image {
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
-  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
 }
 
-.set-section.inactive .set-image {
-  opacity: 0.7;
-  border-color: #adb5bd;
+.set-card:hover .set-image {
+  transform: scale(1.05);
 }
 
-.set-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
-  white-space: nowrap;
-}
-
-.set-section.inactive .set-title {
-  color: #6c757d;
-}
-
-.lists-container {
+.set-info {
+  flex: 1;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
+  justify-content: center;
   min-width: 0;
 }
 
-.list-section {
+.set-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.set-card.active .set-name {
+  color: #065f46;
+}
+
+.set-stats {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.list-title {
+.stat {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #475569;
+  padding: 4px 12px;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #6c757d;
-  flex-shrink: 0;
+  letter-spacing: 0.025em;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
 }
 
-.set-section.inactive .list-title {
-  color: #adb5bd;
+.set-card.active .stat {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border-color: #10b981;
 }
 
-.heroes-list,
-.maps-list {
-  display: inline;
+.set-card:hover .stat {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.hero-item,
-.map-item {
-  font-size: 0.8rem;
-  color: #495057;
+.set-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 10;
 }
 
-.set-section.inactive .hero-item,
-.set-section.inactive .map-item {
-  color: #6c757d;
+.set-status {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  color: var(--status-color);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
 }
 
-.hero-item:not(:last-child)::after,
-.map-item:not(:last-child)::after {
-  content: ',';
-  display: inline-block;
-  margin-right: 4px;
-  color: #6c757d;
+.set-card:hover .set-status {
+  transform: scale(1.05);
 }
 
+.status-active {
+  --status-color: #10b981;
+}
+
+.status-inactive {
+  --status-color: #ef4444;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .set-header {
-    padding: 10px 12px;
-    gap: 12px;
+  .set-card {
+    min-height: 70px;
+  }
+
+  .set-image-container {
+    width: 70px;
+    height: 70px;
   }
 
   .set-info {
-    gap: 10px;
+    padding: 12px 16px;
   }
 
-  .set-image {
-    width: 35px;
-    height: 35px;
-  }
-
-  .set-title {
+  .set-name {
     font-size: 1rem;
+    margin-bottom: 6px;
   }
 
-  .list-title {
+  .stat {
     font-size: 0.75rem;
+    padding: 3px 10px;
   }
 
-  .hero-item,
-  .map-item {
-    font-size: 0.75rem;
+  .set-status {
+    font-size: 0.7rem;
+    padding: 4px 10px;
   }
 }
 
 @media (max-width: 480px) {
-  .set-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 8px 10px;
+  .set-card {
+    min-height: 60px;
+  }
+
+  .set-image-container {
+    width: 60px;
+    height: 60px;
   }
 
   .set-info {
-    gap: 8px;
+    padding: 10px 12px;
   }
 
-  .set-image {
-    width: 30px;
-    height: 30px;
-  }
-
-  .set-title {
+  .set-name {
     font-size: 0.9rem;
+    margin-bottom: 4px;
   }
 
-  .lists-container {
-    gap: 3px;
-  }
-
-  .list-section {
+  .set-stats {
     gap: 6px;
+  }
+
+  .stat {
+    font-size: 0.7rem;
+    padding: 2px 8px;
   }
 }
 </style>

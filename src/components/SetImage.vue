@@ -7,12 +7,11 @@ defineProps<{
 </script>
 
 <template>
-  <figure
-    class="set-card"
-  >
-    <img :src="setImages[set]" :alt="setNames[set]" />
-    <figcaption>{{ setNames[set] }}</figcaption>
-  </figure>
+  <img
+    :src="setImages[set]"
+    :alt="setNames[set]"
+    class="set-image"
+  />
 </template>
 
 <style scoped>

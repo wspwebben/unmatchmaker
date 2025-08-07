@@ -1,90 +1,68 @@
-import { ref, computed, watch, readonly } from 'vue'
+import { ref, computed } from 'vue'
 import { SetCode } from '../consts'
 
-const STORAGE_KEY = 'unmatchmaker-active-sets'
+const activeSets = ref<SetCode[]>([])
 
-// Initialize from localStorage or default to all sets active
-function getInitialActiveSets(): Set<SetCode> {
+// Load active sets from localStorage on initialization
+function loadActiveSets() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem('activeSets')
     if (stored) {
-      const parsed = JSON.parse(stored) as string[]
-      return new Set(parsed.filter(code => Object.values(SetCode).includes(code as SetCode)) as SetCode[])
+      activeSets.value = JSON.parse(stored)
+    } else {
+      // Default to all sets active
+      activeSets.value = Object.values(SetCode)
     }
   } catch (error) {
-    console.warn('Failed to parse active sets from localStorage:', error)
+    console.error('Failed to load active sets:', error)
+    activeSets.value = Object.values(SetCode)
   }
-
-  // Default to all sets active
-  return new Set(Object.values(SetCode))
 }
 
-const activeSets = ref<Set<SetCode>>(getInitialActiveSets())
-
-// Save to localStorage whenever activeSets changes
-watch(activeSets, (newActiveSets) => {
+// Save active sets to localStorage
+function saveActiveSets() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(newActiveSets)))
+    localStorage.setItem('activeSets', JSON.stringify(activeSets.value))
   } catch (error) {
-    console.warn('Failed to save active sets to localStorage:', error)
+    console.error('Failed to save active sets:', error)
   }
-}, { deep: true })
+}
+
+// Initialize on module load
+loadActiveSets()
 
 export function useActiveSets() {
-  const isSetActive = computed(() => (set: SetCode) => activeSets.value.has(set))
+  const isSetActive = (set: SetCode) => activeSets.value.includes(set)
 
   const toggleSet = (set: SetCode) => {
-    if (activeSets.value.has(set)) {
-      activeSets.value.delete(set)
+    if (isSetActive(set)) {
+      activeSets.value = activeSets.value.filter(s => s !== set)
     } else {
-      activeSets.value.add(set)
+      activeSets.value.push(set)
     }
-  }
-
-  const activateSet = (set: SetCode) => {
-    activeSets.value.add(set)
-  }
-
-  const deactivateSet = (set: SetCode) => {
-    activeSets.value.delete(set)
-  }
-
-  const activateAllSets = () => {
-    activeSets.value = new Set(Object.values(SetCode))
-  }
-
-  const deactivateAllSets = () => {
-    activeSets.value.clear()
+    saveActiveSets()
   }
 
   const toggleAllSets = () => {
-    if (activeSets.value.size === Object.values(SetCode).length) {
-      deactivateAllSets()
+    if (allSetsActive.value) {
+      activeSets.value = []
     } else {
-      activateAllSets()
+      activeSets.value = Object.values(SetCode)
     }
+    saveActiveSets()
   }
 
-  const activeSetsCount = computed(() => activeSets.value.size)
-
+  const activeSetsCount = computed(() => activeSets.value.length)
   const totalSetsCount = computed(() => Object.values(SetCode).length)
-
-  const allSetsActive = computed(() => activeSets.value.size === Object.values(SetCode).length)
-
-  const noSetsActive = computed(() => activeSets.value.size === 0)
+  const allSetsActive = computed(() => activeSetsCount.value === totalSetsCount.value)
 
   return {
-    activeSets: readonly(activeSets),
     isSetActive,
     toggleSet,
-    activateSet,
-    deactivateSet,
-    activateAllSets,
-    deactivateAllSets,
     toggleAllSets,
     activeSetsCount,
     totalSetsCount,
     allSetsActive,
-    noSetsActive
+    activeSets: computed(() => activeSets.value)
   }
 }

@@ -46,18 +46,19 @@
 </template>
 
 <script setup lang="ts">
-import { HeroCode} from '../consts'
 import { useRandomGenerator } from '../composables/useRandomGenerator'
+import { useAvailableItems } from '../composables/useAvailableItems'
 import HeroCard from '../components/draft/HeroCard.vue'
+import type { HeroCode } from '../consts'
 
-const heroItems = Object.values(HeroCode)
+const { availableHeroes } = useAvailableItems()
 
 const {
   count,
   maxCount,
   randomItems,
   generateRandomItems
-} = useRandomGenerator(heroItems, 7)
+} = useRandomGenerator<HeroCode>(availableHeroes, 7)
 </script>
 
 <style scoped>
