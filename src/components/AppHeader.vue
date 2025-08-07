@@ -7,9 +7,9 @@
       </router-link>
 
       <nav class="nav-menu">
-        <router-link to="/pool" class="nav-link" active-class="active">Pool</router-link>
         <router-link to="/random-heroes" class="nav-link" active-class="active">Random Heroes</router-link>
         <router-link to="/random-maps" class="nav-link" active-class="active">Random Maps</router-link>
+        <router-link to="/pool" class="nav-link" active-class="active">Pool</router-link>
       </nav>
     </div>
   </header>
