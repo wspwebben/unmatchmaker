@@ -29,6 +29,9 @@ export enum SetCode {
   SlingsAndArrows = 'SLNG',
   WitcherRealmsFall = 'WTCHRF',
   WitcherSteelSilver = 'WTCHSS',
+  AliLee = 'ALILEE',
+  ShredderKrang = 'SRDKRNG',
+  TMNT = 'TMNT',
 }
 
 export const setNames: Record<SetCode, string> = {
@@ -54,6 +57,9 @@ export const setNames: Record<SetCode, string> = {
   [SetCode.SlingsAndArrows]: 'Slings and Arrows',
   [SetCode.WitcherRealmsFall]: 'The Witcher: Realms Fall',
   [SetCode.WitcherSteelSilver]: 'The Witcher: Steel & Silver',
+  [SetCode.AliLee]: 'Muhammad Ali vs Bruce Lee',
+  [SetCode.ShredderKrang]: 'TMNT: Shredder vs Krang',
+  [SetCode.TMNT]: 'Adventures: Teenage Mutant Ninja Turtles',
 }
 
 export const setImages: Record<SetCode, string> = {
@@ -79,6 +85,9 @@ export const setImages: Record<SetCode, string> = {
   [SetCode.SlingsAndArrows]: '/sets/slings-arrows.png',
   [SetCode.WitcherRealmsFall]: '/sets/witcher-realms-fall.png',
   [SetCode.WitcherSteelSilver]: '/sets/witcher-steel-silver.png',
+  [SetCode.AliLee]: '/sets/ali_lee.webp',
+  [SetCode.ShredderKrang]: '/sets/shredder_krang.webp',
+  [SetCode.TMNT]: '/sets/tmnt.webp',
 }
 
 export const setContents: Record<SetCode, SetContent> = {
@@ -169,5 +178,17 @@ export const setContents: Record<SetCode, SetContent> = {
   [SetCode.WitcherSteelSilver]: {
     heroes: [HeroCode.Geralt, HeroCode.Ciri, HeroCode.Leshen],
     maps: [MapCode.KaerMorhen],
+  },
+  [SetCode.AliLee]: {
+    heroes: [HeroCode.BruceLee, HeroCode.Ali],
+    maps: [],
+  },
+  [SetCode.ShredderKrang]: {
+    heroes: [HeroCode.Shredder, HeroCode.Krang],
+    maps: [],
+  },
+  [SetCode.TMNT]: {
+    heroes: [HeroCode.Leonardo, HeroCode.Donatello, HeroCode.Michelangelo, HeroCode.Raphael],
+    maps: [],
   },
 }

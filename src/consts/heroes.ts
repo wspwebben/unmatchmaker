@@ -61,7 +61,14 @@ export enum HeroCode {
   Loki = 'LOKI',
   Blackbeard = 'BKBD',
   Pandora = 'PNDR',
-  Chupacabra = 'CHUP'
+  Chupacabra = 'CHUP',
+  Ali = 'ALI',
+  Leonardo = 'LEO',
+  Raphael = 'RAPH',
+  Michelangelo = 'MIKE',
+  Donatello = 'DON',
+  Shredder = 'SHRDR',
+  Krang = 'KRANG',
 }
 
 export const heroNames: Record<HeroCode, string> = {
@@ -127,7 +134,14 @@ export const heroNames: Record<HeroCode, string> = {
   [HeroCode.Loki]: 'Loki',
   [HeroCode.Blackbeard]: 'Blackbeard',
   [HeroCode.Pandora]: 'Pandora',
-  [HeroCode.Chupacabra]: 'Chupacabra'
+  [HeroCode.Chupacabra]: 'Chupacabra',
+  [HeroCode.Ali]: 'Muhammad Ali',
+  [HeroCode.Leonardo]: 'Leonardo',
+  [HeroCode.Raphael]: 'Raphael',
+  [HeroCode.Michelangelo]: 'Michelangelo',
+  [HeroCode.Donatello]: 'Donatello',
+  [HeroCode.Shredder]: 'Shredder',
+  [HeroCode.Krang]: 'Krang',
 }
 export const heroImages: Record<HeroCode, string> = {
   [HeroCode.Achilles]: '/heroes/achilles.webp',
@@ -192,5 +206,12 @@ export const heroImages: Record<HeroCode, string> = {
   [HeroCode.Loki]: '/heroes/loki.webp',
   [HeroCode.Blackbeard]: '/heroes/blackbeard.webp',
   [HeroCode.Pandora]: '/heroes/pandora.webp',
-  [HeroCode.Chupacabra]: '/heroes/chupacabra.webp'
+  [HeroCode.Chupacabra]: '/heroes/chupacabra.webp',
+  [HeroCode.Ali]: '/heroes/ali.webp',
+  [HeroCode.Leonardo]: '/heroes/leonardo.webp',
+  [HeroCode.Raphael]: '/heroes/raphael.webp',
+  [HeroCode.Michelangelo]: '/heroes/michelangelo.webp',
+  [HeroCode.Donatello]: '/heroes/donatello.webp',
+  [HeroCode.Shredder]: '/heroes/shredder.webp',
+  [HeroCode.Krang]: '/heroes/krang.webp',
 }
